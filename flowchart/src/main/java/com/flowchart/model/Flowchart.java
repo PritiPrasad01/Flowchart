@@ -28,24 +28,27 @@ import lombok.Data;
 @AllArgsConstructor
 public class Flowchart {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	 @Id
+	    @GeneratedValue(strategy = GenerationType.IDENTITY)
+	    private Long id;
+	    
+	    private String title;
+	    
+	    @OneToMany(mappedBy = "flowchart", cascade = CascadeType.ALL, orphanRemoval = true)
+	    @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
+	    private List<Node> nodes=new ArrayList<>();
 
-	private String title;
 
-	@OneToMany(mappedBy = "flowchart", cascade = CascadeType.ALL, orphanRemoval = true)
-	@Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
-	private List<Node> nodes = new ArrayList<>();
-
-	@OneToMany(mappedBy = "flowchart", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<Edge> edges = new ArrayList<>();
-
-	@Column(name = "created_at", nullable = false, updatable = false)
-	private LocalDateTime createdAt;
-
-	public Flowchart() {
-		this.createdAt = LocalDateTime.now();
-	}
+	    
+	    @OneToMany(mappedBy = "flowchart", cascade = CascadeType.ALL, orphanRemoval = true)
+	    private List<Edge> edges = new ArrayList<>();
+	    
+	    @Column(name = "created_at", nullable = false, updatable = false)
+	    private LocalDateTime createdAt;
+	    
+	    public Flowchart() {
+	        this.createdAt = LocalDateTime.now();
+	    }
+	    
 
 }

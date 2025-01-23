@@ -73,22 +73,22 @@ public class FlowchartServiceImplTest {
     @Test
     public void testGetOutgoingEdges() {
         Node node = new Node();
-        node.setId(1L);
+        node.setId("1L");
         Edge edge = new Edge();
         edge.setSource(node);
         flowchart.getEdges().add(edge);
         when(flowchartRepository.findById(1L)).thenReturn(Optional.of(flowchart));
-        List<Edge> result = flowchartService.getOutgoingEdges(1L, 1L);
+        List<Edge> result = flowchartService.getOutgoingEdges(1L, "1L");
         assertEquals(1, result.size());
     }
 
     @Test
     public void testGetConnectedNodes() {
         Node node = new Node();
-        node.setId(1L);
+        node.setId("1L");
         flowchart.getNodes().add(node);
         when(flowchartRepository.findById(1L)).thenReturn(Optional.of(flowchart));
-        List<Node> result = flowchartService.getConnectedNodes(1L, 1L);
+        List<Node> result = flowchartService.getConnectedNodes(1L, "1L");
         assertEquals(1, result.size());
     }
 
@@ -102,9 +102,9 @@ public class FlowchartServiceImplTest {
     @Test
     public void testHasCycle() {
         Node node1 = new Node();
-        node1.setId(1L);
+        node1.setId("1L");
         Node node2 = new Node();
-        node2.setId(2L);
+        node2.setId("2L");
         Edge edge1 = new Edge();
         edge1.setSource(node1);
         edge1.setTarget(node2);
@@ -123,9 +123,9 @@ public class FlowchartServiceImplTest {
     @Test
     public void testHasDisjointNodes() {
         Node node1 = new Node();
-        node1.setId(1L);
+        node1.setId("1L");
         Node node2 = new Node();
-        node2.setId(2L);
+        node2.setId("2L");
         flowchart.getNodes().add(node1);
         flowchart.getNodes().add(node2);
         when(flowchartRepository.findById(1L)).thenReturn(Optional.of(flowchart));
@@ -135,9 +135,9 @@ public class FlowchartServiceImplTest {
     @Test
     public void testHasConsistentEdges() {
         Node node1 = new Node();
-        node1.setId(1L);
+        node1.setId("1L");
         Node node2 = new Node();
-        node2.setId(2L);
+        node2.setId("2L");
         Edge edge = new Edge();
         edge.setSource(node1);
         edge.setTarget(node2);
@@ -151,9 +151,9 @@ public class FlowchartServiceImplTest {
     @Test
     public void testHasConsistentEdges_False() {
         Node node1 = new Node();
-        node1.setId(1L);
+        node1.setId("1L");
         Node node2 = new Node();
-        node2.setId(2L);
+        node2.setId("2L");
         Edge edge = new Edge();
         edge.setSource(node1);
         edge.setTarget(node2);
