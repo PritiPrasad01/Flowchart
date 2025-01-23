@@ -5,6 +5,7 @@ A RESTful API for creating and managing flowcharts.
 - Java 11 or higher
 - Maven 3.6 or higher
 - MySQL
+- Lombok
 
 # Database Configuration
 
