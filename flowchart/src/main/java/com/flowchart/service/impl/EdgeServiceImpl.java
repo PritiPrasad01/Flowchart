@@ -22,12 +22,12 @@ public class EdgeServiceImpl implements EdgeService {
 	}
 
 	@Override
-	public void deleteEdge(Long edgeId) {
+	public void deleteEdge(String edgeId) {
 		edgeRepository.deleteById(edgeId);
 	}
 
 	@Override
-	public Optional<Edge> getEdgeById(Long edgeId) {
+	public Optional<Edge> getEdgeById(String edgeId) {
 		// TODO Auto-generated method stub
 		return edgeRepository.findById(edgeId);
 	}

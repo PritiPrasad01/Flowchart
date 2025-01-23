@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 import com.flowchart.model.Edge;
 
 @Repository
-public interface EdgeRepository extends JpaRepository<Edge, Long> {
+public interface EdgeRepository extends JpaRepository<Edge, String> {
 }

@@ -2,7 +2,12 @@ package com.flowchart.model;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import org.hibernate.annotations.Cascade;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -30,12 +35,11 @@ public class Flowchart {
 	private String title;
 
 	@OneToMany(mappedBy = "flowchart", cascade = CascadeType.ALL, orphanRemoval = true)
-//	@JsonManagedReference 
-    private List<Node> nodes = new ArrayList<>();
+	@Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
+	private List<Node> nodes = new ArrayList<>();
 
-    @OneToMany(mappedBy = "flowchart", cascade = CascadeType.ALL, orphanRemoval = true)
-//    @JsonManagedReference 
-    private List<Edge> edges = new ArrayList<>();
+	@OneToMany(mappedBy = "flowchart", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Edge> edges = new ArrayList<>();
 
 	@Column(name = "created_at", nullable = false, updatable = false)
 	private LocalDateTime createdAt;

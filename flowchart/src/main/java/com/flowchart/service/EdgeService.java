@@ -9,7 +9,7 @@ public interface EdgeService {
 
 	Edge saveEdge(Edge edge);
 	
-	void deleteEdge(Long edgeId);
+	void deleteEdge(String edgeId);
 
-	Optional<Edge> getEdgeById(Long edgeId);
+	Optional<Edge> getEdgeById(String edgeId);
 }

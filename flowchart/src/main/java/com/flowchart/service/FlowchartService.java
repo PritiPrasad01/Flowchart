@@ -15,9 +15,9 @@ public interface FlowchartService {
 
 	void deleteFlowchart(Long id);
 
-	List<Edge> getOutgoingEdges(Long flowchartId, Long nodeId);
+	List<Edge> getOutgoingEdges(Long flowchartId, String nodeId);
 
-	List<Node> getConnectedNodes(Long flowchartId, Long nodeId);
+	List<Node> getConnectedNodes(Long flowchartId, String nodeId);
 
 	List<Flowchart> getAllFlowcharts();
 

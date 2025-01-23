@@ -1,6 +1,5 @@
 package com.flowchart.controller;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +11,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -56,9 +56,8 @@ public class FlowchartController {
 	// Create a new flowchart
 	@PostMapping
 	public ResponseEntity<Flowchart> createFlowchart(@RequestBody Flowchart flowchart) {
-		flowchart.setNodes(new ArrayList<>());
-		flowchart.setEdges(new ArrayList<>());
-
+	
+		System.out.println(flowchart.toString());
 		Flowchart savedFlowchart = flowchartService.createFlowchart(flowchart);
 		return ResponseEntity.ok(savedFlowchart);
 	}
@@ -72,6 +71,22 @@ public class FlowchartController {
 		} else {
 			return ResponseEntity.notFound().build();
 		}
+	}
+	
+	// Delete a flowchart
+	@PutMapping("/{id}")
+	public ResponseEntity<Void> editFlowchart(@PathVariable Long id, @RequestBody Flowchart flowchart) {
+	    System.out.println(flowchart.toString());
+	    java.util.Optional<Flowchart> existingFlowchart = flowchartService.getFlowchartById(id);
+	    if (existingFlowchart.isPresent()) {
+	        Flowchart updatedFlowchart = existingFlowchart.get();
+	        updatedFlowchart.setTitle(flowchart.getTitle());
+	        // Update other fields as needed
+	        flowchartRepository.save(updatedFlowchart);
+	        return ResponseEntity.noContent().build();
+	    } else {
+	        return ResponseEntity.notFound().build();
+	    }
 	}
 
 	// Add Node to Flowchart
@@ -110,14 +125,14 @@ public class FlowchartController {
 
 //   Fetch all outgoing edges for a specific node
 	@GetMapping("/{id}/node/{nodeId}/outgoing-edges")
-	public ResponseEntity<List<Edge>> getOutgoingEdges(@PathVariable Long id, @PathVariable Long nodeId) {
+	public ResponseEntity<List<Edge>> getOutgoingEdges(@PathVariable Long id, @PathVariable String nodeId) {
 		List<Edge> outgoingEdges = flowchartService.getOutgoingEdges(id, nodeId);
 		return ResponseEntity.ok(outgoingEdges);
 	}
 
 	// Fetch all nodes connected to a specific node (directly or indirectly)
 	@GetMapping("/{id}/node/{nodeId}/connected-nodes")
-	public ResponseEntity<List<Node>> getConnectedNodes(@PathVariable Long id, @PathVariable Long nodeId) {
+	public ResponseEntity<List<Node>> getConnectedNodes(@PathVariable Long id, @PathVariable String nodeId) {
 		List<Node> connectedNodes = flowchartService.getConnectedNodes(id, nodeId);
 		return ResponseEntity.ok(connectedNodes);
 	}
@@ -133,7 +148,7 @@ public class FlowchartController {
 	
 	// Delete Node from Flowchart
 	@DeleteMapping("/{flowchartId}/nodes/{nodeId}")
-	public ResponseEntity<Void> deleteNodeFromFlowchart(@PathVariable Long flowchartId, @PathVariable Long nodeId) {
+	public ResponseEntity<Void> deleteNodeFromFlowchart(@PathVariable Long flowchartId, @PathVariable String nodeId) {
 	    Flowchart flowchart = flowchartService.getFlowchartById(flowchartId)
 	            .orElseThrow(() -> new RuntimeException("Flowchart not found"));
 	    Node node = nodeService.getNodeById(nodeId)
@@ -146,7 +161,7 @@ public class FlowchartController {
 
 	// Delete Edge from Flowchart
 	@DeleteMapping("/{flowchartId}/edges/{edgeId}")
-	public ResponseEntity<Void> deleteEdgeFromFlowchart(@PathVariable Long flowchartId, @PathVariable Long edgeId) {
+	public ResponseEntity<Void> deleteEdgeFromFlowchart(@PathVariable Long flowchartId, @PathVariable String edgeId) {
 	    Flowchart flowchart = flowchartService.getFlowchartById(flowchartId)
 	            .orElseThrow(() -> new RuntimeException("Flowchart not found"));
 	    Edge edge = edgeService.getEdgeById(edgeId)

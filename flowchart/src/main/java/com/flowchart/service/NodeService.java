@@ -7,7 +7,7 @@ import com.flowchart.model.Node;
 public interface NodeService {
 	
 	Node saveNode(Node node);
-	Optional<Node> getNodeById(Long id); 
+	Optional<Node> getNodeById(String string); 
 
-	void deleteNode(Long nodeId);
+	void deleteNode(String nodeId);
 }

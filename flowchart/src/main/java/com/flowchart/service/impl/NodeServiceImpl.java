@@ -21,13 +21,13 @@ public class NodeServiceImpl implements NodeService {
 	}
 
 	@Override
-	public Optional<Node> getNodeById(Long id) {
+	public Optional<Node> getNodeById(String id) {
 		// TODO Auto-generated method stub
 		return nodeRepository.findById(id);
 	}
 
 	@Override
-	public void deleteNode(Long nodeId) {
+	public void deleteNode(String nodeId) {
 		nodeRepository.deleteById(nodeId);
 		
 	}

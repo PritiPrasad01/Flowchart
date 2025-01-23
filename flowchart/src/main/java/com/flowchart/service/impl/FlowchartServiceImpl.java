@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Queue;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,9 @@ import org.springframework.stereotype.Service;
 import com.flowchart.model.Edge;
 import com.flowchart.model.Flowchart;
 import com.flowchart.model.Node;
+import com.flowchart.repository.EdgeRepository;
 import com.flowchart.repository.FlowchartRepository;
+import com.flowchart.repository.NodeRepository;
 import com.flowchart.service.FlowchartService;
 
 @Service
@@ -23,6 +26,12 @@ public class FlowchartServiceImpl implements FlowchartService {
 
 	@Autowired
 	private FlowchartRepository flowchartRepository;
+	
+	@Autowired
+    private NodeRepository nodeRepository;
+	
+	@Autowired
+    private EdgeRepository edgeRepository;
 
 	public List<Flowchart> getAllFlowcharts() {
 		return flowchartRepository.findAll();
@@ -32,34 +41,61 @@ public class FlowchartServiceImpl implements FlowchartService {
 		return flowchartRepository.findById(id);
 	}
 
+	
+    
 	public Flowchart createFlowchart(Flowchart flowchart) {
-		return flowchartRepository.save(flowchart);
-	}
+        flowchart = flowchartRepository.save(flowchart);
+        
+        Node node1 = new Node(UUID.randomUUID().toString(), flowchart);
+        node1.getData().setLabel("Node 1");
+        node1.getPosition().setX(0);
+        node1.getPosition().setY(0);
+
+        Node node2 = new Node(UUID.randomUUID().toString(), flowchart);
+        node2.getData().setLabel("Node 2");
+        node2.getPosition().setX(100);
+        node2.getPosition().setY(100);
+
+        node1 = nodeRepository.save(node1);
+        node2 = nodeRepository.save(node2);
+        Edge edge = new Edge(UUID.randomUUID().toString(), node1, node2, true, "hsl(243.801543525013, 100%, 50%)", flowchart);
+        
+        edge = edgeRepository.save(edge);
+        
+        flowchart.getNodes().add(node1);
+        flowchart.getNodes().add(node2);
+        flowchart.getEdges().add(edge);
+        
+        return flowchartRepository.save(flowchart);
+
+    }
+
+
 
 	public void deleteFlowchart(Long id) {
 		flowchartRepository.deleteById(id);
 	}
 
 	@Override
-	public List<Edge> getOutgoingEdges(Long flowchartId, Long nodeId) {
+	public List<Edge> getOutgoingEdges(Long flowchartId, String nodeId) {
 		Optional<Flowchart> flowchart = getFlowchartById(flowchartId);
 		return flowchart.map(fc -> fc.getEdges().stream().filter(edge -> edge.getSource().getId().equals(nodeId))
 				.collect(Collectors.toList())).orElse(Collections.emptyList());
 	}
 
 	@Override
-	public List<Node> getConnectedNodes(Long flowchartId, Long nodeId) {
+	public List<Node> getConnectedNodes(Long flowchartId, String nodeId) {
 		Optional<Flowchart> flowchart = getFlowchartById(flowchartId);
 		return flowchart.map(fc -> {
 			// Using BFS/DFS to find all connected nodes
-			Set<Long> visited = new HashSet<>();
-			Queue<Long> queue = new LinkedList<>();
+			Set<String> visited = new HashSet<>();
+			Queue<String> queue = new LinkedList<>();
 			queue.add(nodeId);
 			while (!queue.isEmpty()) {
-				Long currentNodeId = queue.poll();
+				String currentNodeId = queue.poll();
 				if (!visited.contains(currentNodeId)) {
 					visited.add(currentNodeId);
-					List<Long> neighbors = fc.getEdges().stream()
+					List<String> neighbors = fc.getEdges().stream()
 							.filter(edge -> edge.getSource().getId().equals(currentNodeId))
 							.map(edge -> edge.getTarget().getId()).collect(Collectors.toList());
 					queue.addAll(neighbors);

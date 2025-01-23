@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 import com.flowchart.model.Node;
 
 @Repository
-public interface NodeRepository extends JpaRepository<Node, Long> {
+public interface NodeRepository extends JpaRepository<Node, String> {
 }
